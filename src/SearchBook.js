@@ -1,7 +1,50 @@
 import React from "react"
 import { Link } from "react-router-dom"
+import * as BooksAPI  from "./BooksAPI"
 
 export class SearchBook extends React.Component{
+
+    state = {
+       filter: undefined
+    };
+
+    componentDidMount(){
+        BooksAPI.getAll().then(books => {
+            this.props.changeShelf(books);
+
+        });
+        this.props.changeSearchBookList([]);
+    }
+
+    searchBooks(e){
+        this.setState({filter: e.target.value});
+        BooksAPI.search(e.target.value).then(response => {
+            let list = response.map(book => {
+                let res = this.props.shelf.filter(shelfbook => book.id === shelfbook.id);
+                if(res.length > 0){
+                    book.shelf = res[0].shelf;
+                }else{
+                    book.shelf = "none";
+                }
+                return book;
+            });
+            this.props.changeSearchBookList(list);
+        })
+    }
+
+    ChangeBookStatus(book, e){
+        let type = e.target.value;
+        if(type === 'details'){
+            this.props.changeSelectId(book.id);
+            document.getElementById('trigger').click();
+        }else {
+            BooksAPI.update(book, type).then((response) => {
+                BooksAPI.search(this.state.filter).then((bookList) => {
+                    this.props.changeSearchBookList(bookList);
+                })
+            });
+        }
+    }
 
     render(){
         return (
@@ -9,19 +52,37 @@ export class SearchBook extends React.Component{
                 <div className="search-books-bar">
                     <Link to="/" className="close-search"/>
                     <div className="search-books-input-wrapper">
-                    {/*
-                      NOTES: The search from BooksAPI is limited to a particular set of search terms.
-                      You can find these search terms here:
-                      https://github.com/udacity/reactnd-project-myreads-starter/blob/master/SEARCH_TERMS.md
-
-                      However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
-                      you don't find a specific author or title. Every search is limited by search terms.
-                    */}
-                    <input type="text" placeholder="Search by title or author"/>
+                    <input type="text" placeholder="Search by title or author" onInput={(e) => this.searchBooks(e)}/>
                     </div>
                 </div>
                 <div className="search-books-results">
-                    <ol className="books-grid"></ol>
+                    <ol className="books-grid">
+                        {this.props.searchBookList.map((book) => {
+                            return (
+                                <li key={book.id}>
+                                    <div className="book">
+                                        <div className="book-top">
+                                            <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url("${book.imageLinks.thumbnail}")` }}></div>
+                                            <div className="book-shelf-changer">
+                                                <select defaultValue={book.shelf === undefined ? 'none' : book.shelf} onChange={(e) => this.ChangeBookStatus(book, e)}>
+                                                    <option value="none" disabled>Move to...</option>
+                                                    <option value="currentlyReading">Currently Reading</option>
+                                                    <option value="wantToRead">Want to Read</option>
+                                                    <option value="read">Read</option>
+                                                    <option value="jump" disabled>Jump</option>
+                                                    <option value="details">Details</option>
+                                                    <Link to="/details" id="trigger"/>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div className="book-title">{book.title}</div>
+                                        <div className="book-authors">{book.authors && book.authors[0]}</div>
+                                    </div>
+                                </li>
+                            )
+                        })
+                        }
+                    </ol>
                 </div>
           </div>
         )
