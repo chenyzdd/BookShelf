@@ -48,9 +48,6 @@ export class BookShelf extends React.Component{
                                                         <option value="currentlyReading" disabled>Move to...</option>
                                                         <option value="wantToRead">Want to Read</option>
                                                         <option value="read">Read</option>
-                                                        <option value="jump" disabled>Jump</option>
-                                                        <option value="details">Details</option>
-                                                        <Link to="/details" id="trigger"/>
                                                     </select>
                                                 </div>
                                             </div>
@@ -82,9 +79,6 @@ export class BookShelf extends React.Component{
                                                         <option value="wantToRead" disabled>Move to...</option>
                                                         <option value="currentlyReading">Currently Reading</option>
                                                         <option value="read">Read</option>
-                                                        <option value="jump" disabled>Jump</option>
-                                                        <option value="details">Details</option>
-                                                        <Link to="/details" id="trigger"/>
                                                     </select>
                                                 </div>
                                             </div>
@@ -115,9 +109,6 @@ export class BookShelf extends React.Component{
                                                         <option value="read" disabled>Move to...</option>
                                                         <option value="currentlyReading">Currently Reading</option>
                                                         <option value="wantToRead">Want to Read</option>
-                                                        <option value="jump" disabled>Jump</option>
-                                                        <option value="details">Details</option>
-                                                        <Link to="/details" id="trigger"/>
                                                     </select>
                                                 </div>
                                             </div>

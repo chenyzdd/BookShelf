@@ -34,16 +34,11 @@ export class SearchBook extends React.Component{
 
     ChangeBookStatus(book, e){
         let type = e.target.value;
-        if(type === 'details'){
-            this.props.changeSelectId(book.id);
-            document.getElementById('trigger').click();
-        }else {
-            BooksAPI.update(book, type).then((response) => {
-                BooksAPI.search(this.state.filter).then((bookList) => {
-                    this.props.changeSearchBookList(bookList);
-                })
-            });
-        }
+        BooksAPI.update(book, type).then((response) => {
+            BooksAPI.search(this.state.filter).then((bookList) => {
+                this.props.changeSearchBookList(bookList);
+            })
+        });
     }
 
     render(){
@@ -69,9 +64,6 @@ export class SearchBook extends React.Component{
                                                     <option value="currentlyReading">Currently Reading</option>
                                                     <option value="wantToRead">Want to Read</option>
                                                     <option value="read">Read</option>
-                                                    <option value="jump" disabled>Jump</option>
-                                                    <option value="details">Details</option>
-                                                    <Link to="/details" id="trigger"/>
                                                 </select>
                                             </div>
                                         </div>
