@@ -9,26 +9,24 @@ export class SearchBook extends React.Component{
     };
 
     componentDidMount(){
-        BooksAPI.getAll().then(books => {
-            this.props.changeShelf(books);
-
-        });
         this.props.changeSearchBookList([]);
     }
 
     searchBooks(e){
         this.setState({filter: e.target.value});
         BooksAPI.search(e.target.value).then(response => {
-            let list = response.map(book => {
-                let res = this.props.shelf.filter(shelfbook => book.id === shelfbook.id);
-                if(res.length > 0){
-                    book.shelf = res[0].shelf;
-                }else{
-                    book.shelf = "none";
-                }
-                return book;
-            });
-            this.props.changeSearchBookList(list);
+            if(response.constructor === Array) {
+                let list = response.map(book => {
+                    let res = this.props.shelf.filter(shelfbook => book.id === shelfbook.id);
+                    if (res.length > 0) {
+                        book.shelf = res[0].shelf;
+                    } else {
+                        book.shelf = "none";
+                    }
+                    return book;
+                });
+                this.props.changeSearchBookList(list);
+            }
         })
     }
 
@@ -36,7 +34,9 @@ export class SearchBook extends React.Component{
         let type = e.target.value;
         BooksAPI.update(book, type).then((response) => {
             BooksAPI.search(this.state.filter).then((bookList) => {
-                this.props.changeSearchBookList(bookList);
+                if(bookList.constructor === Array) {
+                    this.props.changeSearchBookList(bookList);
+                }
             })
         });
     }
@@ -57,7 +57,7 @@ export class SearchBook extends React.Component{
                                 <li key={book.id}>
                                     <div className="book">
                                         <div className="book-top">
-                                            <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url("${book.imageLinks.thumbnail}")` }}></div>
+                                            <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url("${book.imageLinks && book.imageLinks.thumbnail}")` }}></div>
                                             <div className="book-shelf-changer">
                                                 <select defaultValue={book.shelf === undefined ? 'none' : book.shelf} onChange={(e) => this.ChangeBookStatus(book, e)}>
                                                     <option value="none" disabled>Move to...</option>

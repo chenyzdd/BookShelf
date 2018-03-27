@@ -5,11 +5,7 @@ import {Link} from "react-router-dom"
 export class BookShelf extends React.Component{
 
     componentDidMount(){
-        BooksAPI.getAll().then(books => {
-            console.log(books)
-            this.props.changeShelf(books);
-
-        })
+        this.props.changeShelf();
     }
 
     ChangeBookStatus(book, e){
@@ -19,9 +15,7 @@ export class BookShelf extends React.Component{
             document.getElementById('trigger').click();
         }else{
             BooksAPI.update(book, type).then(response => {
-                BooksAPI.getAll().then(books => {
-                this.props.changeShelf(books);
-            })
+                this.props.changeShelf();
             });
         }
     }
@@ -48,6 +42,7 @@ export class BookShelf extends React.Component{
                                                         <option value="currentlyReading" disabled>Move to...</option>
                                                         <option value="wantToRead">Want to Read</option>
                                                         <option value="read">Read</option>
+                                                        <option value="none">Delete</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -79,6 +74,7 @@ export class BookShelf extends React.Component{
                                                         <option value="wantToRead" disabled>Move to...</option>
                                                         <option value="currentlyReading">Currently Reading</option>
                                                         <option value="read">Read</option>
+                                                        <option value="none">Delete</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -109,6 +105,7 @@ export class BookShelf extends React.Component{
                                                         <option value="read" disabled>Move to...</option>
                                                         <option value="currentlyReading">Currently Reading</option>
                                                         <option value="wantToRead">Want to Read</option>
+                                                        <option value="none">Delete</option>
                                                     </select>
                                                 </div>
                                             </div>

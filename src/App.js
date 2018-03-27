@@ -3,6 +3,7 @@ import './App.css'
 import { Route } from 'react-router-dom'
 import { BookShelf } from "./BookShelf"
 import {SearchBook} from "./SearchBook"
+import * as BooksAPI from "./BooksAPI";
 
 export class BooksApp extends React.Component {
 
@@ -11,8 +12,16 @@ export class BooksApp extends React.Component {
         searchBookList: []
     };
 
-    changeShelf(shelf){
-        this.setState({shelf: shelf});
+    componentDidMount(){
+        this.changeShelf();
+    }
+
+    changeShelf(){
+        BooksAPI.getAll().then(books => {
+            if(books.constructor === Array){
+                this.setState({shelf: books});
+            }
+        });
     }
 
     changeSearchBookList(booklist){
